@@ -1,0 +1,12 @@
+{
+  "name": "community-counters",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "telegram": "node scripts/telegram.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
