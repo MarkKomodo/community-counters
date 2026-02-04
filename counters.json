@@ -1,0 +1,128 @@
+[
+  {
+    "id": "ig_main",
+    "platform": "Instagram",
+    "entity_type": "Account",
+    "name": "@furrybellyhub",
+    "value": 0
+  },
+  {
+    "id": "bsky_main",
+    "platform": "Bluesky",
+    "entity_type": "Account",
+    "name": "@furrybellyhub",
+    "value": 0
+  },
+  {
+    "id": "bsky_burp",
+    "platform": "Bluesky",
+    "entity_type": "Account",
+    "name": "@furryburps",
+    "value": 0
+  },
+  {
+    "id": "dc_main",
+    "platform": "Discord",
+    "entity_type": "Server",
+    "name": "Furry Belly Hub",
+    "value": 0
+  },
+  {
+    "id": "dc_burp",
+    "platform": "Discord",
+    "entity_type": "Server",
+    "name": "Furry Burps",
+    "value": 0
+  },
+  {
+    "id": "tg_channel_gifs",
+    "platform": "Telegram",
+    "entity_type": "Channel",
+    "name": "@FurryBellyGifs",
+    "value": 0
+  },
+  {
+    "id": "tg_channel_irl",
+    "platform": "Telegram",
+    "entity_type": "Channel",
+    "name": "@FurryBellyIRL",
+    "value": 0
+  },
+  {
+    "id": "tg_channel_burp",
+    "platform": "Telegram",
+    "entity_type": "Channel",
+    "name": "@FurryBurps",
+    "value": 0
+  },
+  {
+    "id": "tg_channel_nsfw",
+    "platform": "Telegram",
+    "entity_type": "Channel",
+    "name": "@FurryBellyNSFWC",
+    "value": 0
+  },
+  {
+    "id": "tg_channel_main",
+    "platform": "Telegram",
+    "entity_type": "Channel",
+    "name": "@FurryBellyHub",
+    "value": 0
+  },
+  {
+    "id": "tg_group_gifs",
+    "platform": "Telegram",
+    "entity_type": "Group",
+    "name": "@FurryBellyGifsChat",
+    "value": 0
+  },
+  {
+    "id": "tg_group_irl",
+    "platform": "Telegram",
+    "entity_type": "Group",
+    "name": "@FurryBellyIRLChat",
+    "value": 0
+  },
+  {
+    "id": "tg_group_burp",
+    "platform": "Telegram",
+    "entity_type": "Group",
+    "name": "@FurryBurpsChat",
+    "value": 0
+  },
+  {
+    "id": "tg_group_nsfw",
+    "platform": "Telegram",
+    "entity_type": "Group",
+    "name": "@FurryBellyNSFWChat",
+    "value": 0
+  },
+  {
+    "id": "tg_group_vr",
+    "platform": "Telegram",
+    "entity_type": "Group",
+    "name": "@FurryBellyVR",
+    "value": 0
+  },
+  {
+    "id": "vrc_main",
+    "platform": "VRChat",
+    "entity_type": "Group",
+    "name": "FURFAT.7417",
+    "value": 0
+  },
+  {
+    "id": "vrc_burp",
+    "platform": "VRChat",
+    "entity_type": "Group",
+    "name": "BELCH.2518",
+    "value": 0
+  },
+  {
+    "id": "barq_main",
+    "platform": "Barq!",
+    "entity_type": "Group",
+    "name": "Furry Belly Hub",
+    "value": 0
+  }
+]
