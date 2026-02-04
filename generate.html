@@ -1,1 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Counters JSON</title>
+</head>
+<body>
+  <h1>Community Counters Generator</h1>
+  <button id="run">Generate JSON</button>
+  <pre id="output"></pre>
+
+  <script>
+    const SHEET_ID = "1oU6KQGFRNWbtT95AmpwVaeN3gw702aQMJ2Ja8Y1qNp4";
+    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+    document.getElementById("run").addEventListener("click", async () => {
+      const res = await fetch(URL);
+      const text = await res.text();
+
+      const json = JSON.parse(
+        text.substring(
+          text.indexOf("{"),
+          text.lastIndexOf("}") + 1
+        )
+      );
+
+      const cols = json.table.cols.map(c => c.label);
+      const rows = json.table.rows.map(r => {
+        const obj = {};
+        r.c.forEach((cell, i) => {
+          obj[cols[i]] = cell ? cell.v : null;
+        });
+        return obj;
+      });
+
+      const counters = rows.filter(
+        r => r.active === true && r.id !== "total_all"
+      ).map(r => ({
+        id: r.id,
+        platform: r.platform,
+        entity_type: r.entity_type,
+        name: r.name,
+        value: r.value
+      }));
+
+      const totalRow = rows.find(r => r.id === "total_all");
+
+      const total = {
+        id: "total_all",
+        value: totalRow ? totalRow.value : 0
+      };
+
+      document.getElementById("output").textContent =
+        "counters.json:\n\n" +
+        JSON.stringify(counters, null, 2) +
+        "\n\n-----------------\n\n" +
+        "total.json:\n\n" +
+        JSON.stringify(total, null, 2);
+    });
+  </script>
+</body>
+</html>
 
