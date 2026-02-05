@@ -28,7 +28,7 @@ jobs:
 
       # 4. Run the counter script
       - name: Run counter script
-        run: node counter.js
+        run: node update-vrchat.js
 
       # 5. Commit and push the updated XML
       - name: Commit and push XML
