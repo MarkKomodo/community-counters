@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<instagram>
-  <account>furrybellyhub</account>
-  <followers>12345</followers>
-</instagram>
+<data>
+  <instagram>
+    <username>furrybellyhub</username>
+    <followers>12345</followers>
+  </instagram>
+</data>
