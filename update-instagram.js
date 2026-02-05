@@ -3,27 +3,34 @@ import fetch from "node-fetch";
 
 const USERNAME = "furrybellyhub";
 
-function normalizeNumber(text) {
+function normalize(text) {
+  text = text.toLowerCase().trim();
+
+  if (text.endsWith("k")) {
+    return Math.round(parseFloat(text) * 1000);
+  }
+  if (text.endsWithWith("m")) {
+    return Math.round(parseFloat(text) * 1000000);
+  }
   return parseInt(text.replace(/[^0-9]/g, ""), 10);
 }
 
 async function run() {
-  const response = await fetch(`https://www.picuki.com/profile/${USERNAME}`, {
-    headers: {
-      "User-Agent": "Mozilla/5.0"
-    }
-  });
+  const response = await fetch(
+    `https://img.shields.io/instagram/followers/${USERNAME}.json`
+  );
 
-  const html = await response.text();
-
-  // Picuki exposes followers as: <span>12,345</span> Followers
-  const match = html.match(/<span[^>]*>([\d,]+)<\/span>\s*Followers/i);
-
-  if (!match) {
-    throw new Error("Follower count not found (Picuki)");
+  if (!response.ok) {
+    throw new Error("Failed to fetch Shields.io data");
   }
 
-  const followers = normalizeNumber(match[1]);
+  const data = await response.json();
+
+  if (!data.message) {
+    throw new Error("Follower count missing in Shields response");
+  }
+
+  const followers = normalize(data.message);
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <data>
