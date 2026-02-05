@@ -1,33 +1,57 @@
-name: Update VRChat members
+name: Update VRChat Member Counts
 
 on:
   schedule:
-    - cron: "*/30 * * * *"  # every 30 minutes
-  workflow_dispatch:
+    - cron: '0 * * * *' # runs every hour
+  workflow_dispatch: # allows manual run
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
 
-      - name: Install dependencies
-        run: npm install node-fetch@3
+      - name: Fetch VRChat counts and update XML
+        run: |
+          npm install node-fetch@3
 
-      - name: Run VRChat update script
-        run: node update-vrchat.js
+          node <<'EOF'
+          import fs from "fs";
+          import fetch from "node-fetch";
+
+          const urls = [
+            { name: "furrybellyhub", url: "https://vrcgs.tesca.io/ja?query=FURRY+BELLY+HUB" },
+            { name: "furryburps", url: "https://vrcgs.tesca.io/ja?query=FURRY+BURPS" }
+          ];
+
+          let xml = "<vrchat>\n";
+
+          for (const grp of urls) {
+            const res = await fetch(grp.url);
+            const text = await res.text();
+
+            // Simple regex to extract the number (adjust if needed)
+            const match = text.match(/Member Count: (\d+)/i);
+            const count = match ? match[1] : 0;
+
+            console.log(`${grp.name}: ${count} members`);
+            xml += `  <${grp.name}>${count}</${grp.name}>\n`;
+          }
+
+          xml += "</vrchat>\n";
+
+          fs.writeFileSync("vrchat.xml", xml);
+          EOF
 
       - name: Commit and push XML
         run: |
           git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.email "actions@github.com"
           git add vrchat.xml
-          git commit -m "Update VRChat members" || echo "No changes to commit"
+          git commit -m "Update VRChat member counts"
           git push
