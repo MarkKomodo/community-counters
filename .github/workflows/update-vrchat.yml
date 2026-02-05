@@ -21,16 +21,11 @@ jobs:
         with:
           node-version: '18'
 
-      # 3. Install dependencies
-      - name: Install dependencies
-        run: |
-          npm install node-fetch@2 cheerio
-
-      # 4. Run the counter script
+      # 3. Run the counter script
       - name: Run counter script
         run: node update-vrchat.js
 
-      # 5. Commit and push the updated XML
+      # 4. Commit and push the updated XML
       - name: Commit and push XML
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
