@@ -1,6 +1,6 @@
 import fs from "fs";
 import fetch from "node-fetch";
-import cheerio from "cheerio";
+import { load } from "cheerio"; // <-- fixed import
 
 // VRChat group URLs from vrcgs.tesca.io
 const urls = [
@@ -20,7 +20,7 @@ async function run() {
     }
 
     const text = await res.text();
-    const $ = cheerio.load(text);
+    const $ = load(text); // <-- use load() instead of cheerio.load()
 
     // CSS selector equivalent of your XPath:
     // /html/body/div[3]/div[3]/div/a[1]/div[1]/div[2]/div[2]/p[2]
