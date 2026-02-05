@@ -1,49 +1,35 @@
 import fs from "fs";
-import fetch from "node-fetch"; // make sure to install node-fetch in GitHub Actions
+import fetch from "node-fetch";
 
-const groups = [
-  { name: "furrybellyhub", id: "grp_a787b893-400a-4ab0-9c15-83e21dd69e7d" },
-  { name: "furryburps", id: "grp_b4f77812-b06d-42fc-b333-0e62e310e520" }
+// VRChat group URLs from the vrcgs.tesca.io site
+const urls = [
+  { name: "furrybellyhub", url: "https://vrcgs.tesca.io/ja?query=FURRY+BELLY+HUB" },
+  { name: "furryburps", url: "https://vrcgs.tesca.io/ja?query=FURRY+BURPS" }
 ];
 
-async function getMemberCount(id) {
-  const url = `https://vrchat.com/api/1/groups/${id}`;
-  
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch VRChat group: " + id + " | Status: " + response.status);
-  }
-
-  const data = await response.json();
-
-  if (typeof data.memberCount !== "number") {
-    throw new Error("Member count not found for " + id);
-  }
-
-  return data.memberCount;
-}
-
 async function run() {
-  let xml = `<vrchat>\n`;
+  let xml = "<vrchat>\n";
 
-  for (const grp of groups) {
-    const count = await getMemberCount(grp.id);
-    xml += `  <${grp.name}>${count}</${grp.name}>\n`;
+  for (const grp of urls) {
+    const res = await fetch(grp.url);
+    const text = await res.text();
+
+    // Regex to extract the member count from the page
+    // Adjust if needed depending on the exact format on the site
+    const match = text.match(/Member Count: (\d+)/i);
+    const count = match ? match[1] : 0;
+
     console.log(`${grp.name}: ${count} members`);
+    xml += `  <${grp.name}>${count}</${grp.name}>\n`;
   }
 
-  xml += `</vrchat>\n`;
+  xml += "</vrchat>\n";
 
+  // Save XML file in the repo
   fs.writeFileSync("vrchat.xml", xml);
   console.log("VRChat XML updated!");
 }
 
 run().catch(err => {
   console.error("Error:", err.message);
-  process.exit(1);
 });
