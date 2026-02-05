@@ -1,10 +1,11 @@
+// counter.js
 const fs = require('fs');
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
 const groups = [
-  { name: 'FURRY BELLY HUB', url: 'https://vrcgs.tesca.io/ja?query=FURRY+BELLY+HUB' },
-  { name: 'FURRY BURPS', url: 'https://vrcgs.tesca.io/ja?query=FURRY+BURPS' }
+  { name: 'furrybellyhub', url: 'https://vrcgs.tesca.io/ja?query=FURRY+BELLY+HUB' },
+  { name: 'furryburps', url: 'https://vrcgs.tesca.io/ja?query=FURRY+BURPS' }
 ];
 
 async function fetchMembers(url) {
@@ -22,14 +23,14 @@ async function fetchMembers(url) {
 }
 
 async function main() {
-  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<groups>\n';
+  let xml = '<vrchat>\n';
 
   for (const group of groups) {
     const members = await fetchMembers(group.url);
-    xml += `  <group>\n    <name>${group.name}</name>\n    <members>${members}</members>\n  </group>\n`;
+    xml += `  <${group.name}>${members}</${group.name}>\n`;
   }
 
-  xml += '</groups>';
+  xml += '</vrchat>';
 
   fs.writeFileSync('groups.xml', xml, 'utf8');
   console.log('XML file updated successfully!');
