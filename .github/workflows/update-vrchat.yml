@@ -1,6 +1,6 @@
 name: Update VRChat Member Counts
 
-# Triggers: every hour + manual run
+# Triggers: hourly + manual run
 on:
   schedule:
     - cron: '0 * * * *' # every hour
@@ -23,7 +23,7 @@ jobs:
       # Step 3: Install dependencies
       - name: Install dependencies
         run: |
-          npm install node-fetch@2 cheerio
+          npm install node-fetch cheerio
 
       # Step 4: Run the VRChat update script
       - name: Run update-vrchat.js
