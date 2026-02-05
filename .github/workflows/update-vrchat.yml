@@ -2,7 +2,7 @@ name: Update VRChat members
 
 on:
   schedule:
-    - cron: "*/30 * * * *"  # every 30 min
+    - cron: "*/30 * * * *"  # every 30 minutes
   workflow_dispatch:
 
 jobs:
@@ -18,9 +18,14 @@ jobs:
         with:
           node-version: 18
 
-      - run: node update-vrchat.js
+      - name: Install dependencies
+        run: npm install node-fetch@3
 
-      - run: |
+      - name: Run VRChat update script
+        run: node update-vrchat.js
+
+      - name: Commit and push XML
+        run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add vrchat.xml
