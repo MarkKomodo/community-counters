@@ -9,7 +9,7 @@ function normalize(text) {
   if (text.endsWith("k")) {
     return Math.round(parseFloat(text) * 1000);
   }
-  if (text.endsWithWith("m")) {
+  if (text.endsWith("m")) {
     return Math.round(parseFloat(text) * 1000000);
   }
   return parseInt(text.replace(/[^0-9]/g, ""), 10);
