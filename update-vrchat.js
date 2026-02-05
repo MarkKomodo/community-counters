@@ -1,6 +1,6 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 const groups = [
   { name: 'furrybellyhub', url: 'https://vrcgs.tesca.io/ja?query=FURRY+BELLY+HUB' },
@@ -20,12 +20,12 @@ async function fetchMembers(url, groupName) {
       .text();
 
     const number = parseInt(text.replace('人', '').replace(/,/g, ''), 10);
-    if (isNaN(number)) throw new Error('Could not parse member count');
+    if (isNaN(number)) throw new Error('Parse failed');
 
     return number;
   } catch (err) {
     console.error(`Skipping ${groupName}: ${err.message}`);
-    return 0; // skip on error
+    return 0;
   }
 }
 
