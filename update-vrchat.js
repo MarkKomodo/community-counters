@@ -1,4 +1,5 @@
 import fs from "fs";
+import fetch from "node-fetch"; // make sure to install node-fetch in GitHub Actions
 
 const groups = [
   { name: "furrybellyhub", id: "grp_a787b893-400a-4ab0-9c15-83e21dd69e7d" },
@@ -7,12 +8,15 @@ const groups = [
 
 async function getMemberCount(id) {
   const url = `https://vrchat.com/api/1/groups/${id}`;
+  
   const response = await fetch(url, {
-    headers: { "User-Agent": "Mozilla/5.0" }
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch VRChat group: " + id);
+    throw new Error("Failed to fetch VRChat group: " + id + " | Status: " + response.status);
   }
 
   const data = await response.json();
