@@ -3,27 +3,32 @@ name: Update VRChat Member Counts
 on:
   schedule:
     - cron: '0 * * * *' # every hour
-  workflow_dispatch:
+  workflow_dispatch: # allows manual trigger
 
 jobs:
   update:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v3
 
+      # Step 2: Set up Node.js 18
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # Step 3: Install cheerio
       - name: Install dependencies
-        run: npm install node-fetch@2 cheerio
+        run: npm install cheerio
 
+      # Step 4: Run the new VRChat scraper
       - name: Run VRChat counter
         run: node update-vrchat.cjs
 
-      - name: Commit updated XML
+      # Step 5: Commit and push vrchat.xml if changed
+      - name: Commit and push XML
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
