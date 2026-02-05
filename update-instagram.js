@@ -3,25 +3,6 @@ import fetch from "node-fetch";
 
 const USERNAME = "furrybellyhub";
 
-function normalize(text) {
-  if (!text) return null;
-
-  text = text.toLowerCase().trim();
-
-  if (text === "?" || text === "unknown") return null;
-
-  if (text.endsWith("k")) {
-    return Math.round(parseFloat(text) * 1000);
-  }
-
-  if (text.endsWith("m")) {
-    return Math.round(parseFloat(text) * 1000000);
-  }
-
-  const num = parseInt(text.replace(/[^0-9]/g, ""), 10);
-  return Number.isNaN(num) ? null : num;
-}
-
 function getPreviousFollowers() {
   try {
     const xml = fs.readFileSync("instagram.xml", "utf8");
@@ -34,16 +15,41 @@ function getPreviousFollowers() {
 
 async function run() {
   const response = await fetch(
-    `https://img.shields.io/instagram/followers/${USERNAME}.json`
+    `https://socialblade.com/instagram/user/${USERNAME}`,
+    {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept-Language": "en-US,en;q=0.9"
+      }
+    }
   );
 
-  const data = await response.json();
+  const html = await response.text();
 
-  const newFollowers = normalize(data.message);
+  /*
+    SocialBlade usually renders followers like:
+
+    <span class="YouTubeUserTopInfo">18,742</span>
+    <span class="YouTubeUserTopLight">Followers</span>
+  */
+
+  const match = html.match(
+    /([\d,]+)<\/span>\s*<span[^>]*>Followers/i
+  );
+
   const oldFollowers = getPreviousFollowers();
 
-  const followers =
-    newFollowers !== null ? newFollowers : oldFollowers ?? 0;
+  if (!match) {
+    console.log("SocialBlade follower count not found, keeping previous value");
+    return;
+  }
+
+  const followers = parseInt(match[1].replace(/,/g, ""), 10);
+
+  if (Number.isNaN(followers)) {
+    console.log("Parsed NaN, keeping previous value");
+    return;
+  }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <data>
@@ -54,7 +60,7 @@ async function run() {
 </data>`;
 
   fs.writeFileSync("instagram.xml", xml);
-  console.log("Followers set to:", followers);
+  console.log("Updated followers:", followers);
 }
 
 run();
