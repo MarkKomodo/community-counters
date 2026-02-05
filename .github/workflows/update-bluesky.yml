@@ -1,0 +1,33 @@
+name: Update Bluesky followers
+
+# When the workflow runs
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed to push XML changes
+
+    steps:
+      # 1️⃣ Check out the repo
+      - uses: actions/checkout@v4
+
+      # 2️⃣ Set up Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # 3️⃣ Run the Bluesky script
+      - run: node update-bluesky.js
+
+      # 4️⃣ Commit and push changes
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add bluesky.xml
+          git commit -m "Update Bluesky followers" || echo "No changes to commit"
+          git push
