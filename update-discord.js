@@ -1,39 +1,38 @@
 import fs from "fs";
+import { Client, GatewayIntentBits } from "discord.js";
 
+// Bot token stored as a secret in GitHub
+const token = process.env.DISCORD_BOT_TOKEN;
+
+// Your Discord server IDs
 const servers = [
-  { name: "furrybellyhub", url: "https://discord.com/api/guilds/1087777743728558183/widget.json" },
-  { name: "furryburps", url: "https://discord.com/api/guilds/1263262629204328600/widget.json" }
+  { name: "furrybellyhub", id: "1087777743728558183" },
+  { name: "furryburps", id: "1263262629204328600" }
 ];
 
-async function getMembers(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Failed to fetch Discord server JSON: " + url);
-  const data = await res.json();
+// Create Discord client with Guilds and GuildMembers intents
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+});
 
-  // Use approximate_member_count if available, fallback to members array length
-  if (data.approximate_member_count !== undefined) {
-    return data.approximate_member_count;
-  }
-  if (data.members && Array.isArray(data.members)) {
-    return data.members.length;
-  }
+client.once("ready", async () => {
+  console.log(`Logged in as ${client.user.tag}`);
 
-  return 0; // fallback if no info
-}
-
-async function run() {
   let xml = `<discord>\n`;
 
   for (const srv of servers) {
-    const count = await getMembers(srv.url);
+    const guild = await client.guilds.fetch(srv.id);
+    await guild.members.fetch(); // fetch all members
+    const count = guild.memberCount; // total members
     xml += `  <${srv.name}>${count}</${srv.name}>\n`;
-    console.log(`${srv.name}: ${count} members`);
+    console.log(`${srv.name}: ${count} total members`);
   }
 
   xml += `</discord>\n`;
-
   fs.writeFileSync("discord.xml", xml);
   console.log("Discord XML updated!");
-}
 
-run();
+  client.destroy(); // safely disconnect
+});
+
+client.login(token);
