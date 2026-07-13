@@ -1,7 +1,7 @@
 import fs from "fs";
 import fetch from "node-fetch";
 
-const COOKIE = fs.readFileSync("vrchat-cookie.txt", "utf8");
+const COOKIE = process.env.VRCHAT_COOKIE;
 
 const GROUPS = [
   {
