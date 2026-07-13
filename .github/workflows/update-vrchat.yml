@@ -16,22 +16,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
 
-      - name: Debug VRChat cookie format
-        env:
-          VRCHAT_COOKIE: ${{ secrets.VRCHAT_COOKIE }}
-        run: |
-          node -e "console.log('Length:', process.env.VRCHAT_COOKIE.length)"
-          node -e "console.log('Starts with auth:', process.env.VRCHAT_COOKIE.startsWith('auth='))"
-          node -e "console.log('Contains spaces:', process.env.VRCHAT_COOKIE.includes(' '))"
-
       - name: Update VRChat counter
         env:
-          VRCHAT_COOKIE: ${{ secrets.VRCHAT_COOKIE }}
+          VRCHAT_USERNAME: ${{ secrets.VRCHAT_USERNAME }}
+          VRCHAT_PASSWORD: ${{ secrets.VRCHAT_PASSWORD }}
+          VRCHAT_TOTP_SECRET: ${{ secrets.VRCHAT_TOTP_SECRET }}
         run: node update-vrchat.js
 
       - name: Commit changes
