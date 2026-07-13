@@ -22,7 +22,7 @@ jobs:
           node-version: 18
 
       # 3️⃣ Run the Bluesky script
-      - run: node update-bluesky.js
+      - run: node bluesky.js
 
       # 4️⃣ Commit and push changes
       - run: |
