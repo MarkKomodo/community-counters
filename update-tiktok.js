@@ -50,7 +50,26 @@ async function run() {
   console.log(`Updated TikTok followers: ${followers}`);
 }
 
-run().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+async function run() {
+  try {
+    const followers = await getFollowers();
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <tiktok>
+    <username>${USERNAME}</username>
+    <followers>${followers}</followers>
+  </tiktok>
+</data>`;
+
+    fs.writeFileSync("tiktok.xml", xml);
+
+    console.log(`Updated TikTok followers: ${followers}`);
+  } catch (err) {
+    console.error("Failed to update TikTok followers:");
+    console.error(err);
+    process.exit(1);
+  }
+}
+
+run();
