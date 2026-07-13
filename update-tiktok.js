@@ -35,22 +35,6 @@ async function getFollowers() {
 }
 
 async function run() {
-  const followers = await getFollowers();
-
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<data>
-  <tiktok>
-    <username>${USERNAME}</username>
-    <followers>${followers}</followers>
-  </tiktok>
-</data>`;
-
-  fs.writeFileSync("tiktok.xml", xml);
-
-  console.log(`Updated TikTok followers: ${followers}`);
-}
-
-async function run() {
   try {
     const followers = await getFollowers();
 
