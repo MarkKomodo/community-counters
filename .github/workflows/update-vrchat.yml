@@ -21,6 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Debug VRChat cookie format
+        env:
+          VRCHAT_COOKIE: ${{ secrets.VRCHAT_COOKIE }}
+        run: |
+          node -e "console.log('Length:', process.env.VRCHAT_COOKIE.length)"
+          node -e "console.log('Starts with auth:', process.env.VRCHAT_COOKIE.startsWith('auth='))"
+          node -e "console.log('Contains spaces:', process.env.VRCHAT_COOKIE.includes(' '))"
+
       - name: Update VRChat counter
         env:
           VRCHAT_COOKIE: ${{ secrets.VRCHAT_COOKIE }}
