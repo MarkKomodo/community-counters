@@ -21,12 +21,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check VRChat cookie
-        env:
-          VRCHAT_COOKIE: ${{ secrets.VRCHAT_COOKIE }}
-        run: |
-          node -e "console.log('Cookie length:', process.env.VRCHAT_COOKIE?.length)"
-
       - name: Update VRChat counter
         env:
           VRCHAT_COOKIE: ${{ secrets.VRCHAT_COOKIE }}
