@@ -8,7 +8,8 @@ async function getFollowers() {
     `https://www.tikwm.com/api/user/info?unique_id=${USERNAME}`,
     {
       headers: {
-        "User-Agent": "Mozilla/5.0"
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
       }
     }
   );
@@ -20,6 +21,7 @@ async function getFollowers() {
   const json = await response.json();
 
   if (json.code !== 0) {
+    console.log(JSON.stringify(json, null, 2));
     throw new Error(`TikWM error: ${json.msg}`);
   }
 
