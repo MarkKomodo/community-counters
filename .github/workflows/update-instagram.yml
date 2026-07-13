@@ -18,7 +18,7 @@ jobs:
 
       - run: npm install node-fetch
 
-      - run: node instagram.js
+      - run: node update-instagram.js
 
       - run: |
           git config user.name "github-actions"
