@@ -14,6 +14,10 @@ const groups = [
 
 const COOKIE = process.env.VRCHAT_COOKIE;
 
+console.log("Cookie length:", COOKIE?.length);
+console.log("Starts with auth:", COOKIE?.startsWith("auth="));
+console.log("Has twoFactorAuth:", COOKIE?.includes("twoFactorAuth"));
+
 async function getMembers(group) {
   const response = await fetch(
     `https://api.vrchat.cloud/api/1/groups/${group.id}`,
