@@ -19,7 +19,7 @@ jobs:
           node-version: 18
 
       - run: npm install discord.js
-      - run: node discord.js
+      - run: node update-discord.js
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
 
