@@ -18,7 +18,7 @@ jobs:
 
       - run: npm install
 
-      - run: node tiktok.js
+      - run: node update-tiktok.js
 
       - run: |
           git config user.name "github-actions"
