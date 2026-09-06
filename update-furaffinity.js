@@ -27,27 +27,61 @@ function getPreviousValue(name) {
   }
 }
 
-// Fetch watcher count from a FA userpage
-async function getWatchers(user) {
-  const url = `https://www.furaffinity.net/user/${encodeURIComponent(user)}`;
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
-      "Accept-Language": "en-US,en;q=0.9"
-    }
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${user}`);
-  const html = await res.text();
-
+function parseWatchers(html, user) {
   for (const re of PATTERNS) {
     const m = html.match(re);
     if (m) return parseInt(m[1].replace(/,/g, ""), 10);
   }
-
   throw new Error(
     `"Watched by" not found on ${user}'s page - FA may hide it from logged-out visitors`
   );
+}
+
+// Fetch the FA userpage HTML - direct first, then via reader proxy if blocked
+async function fetchPage(user) {
+  const target = `https://www.furaffinity.net/user/${encodeURIComponent(user)}`;
+
+  // Attempt 1: direct, with a full set of browser-like headers
+  try {
+    const res = await fetch(target, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "Accept":
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "identity",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-User": "?1",
+        "Cache-Control": "max-age=0"
+      }
+    });
+    if (res.ok) {
+      console.log("direct fetch OK");
+      return await res.text();
+    }
+    console.log(`direct fetch HTTP ${res.status}, trying reader proxy...`);
+  } catch (err) {
+    console.log(`direct fetch error (${err.message}), trying reader proxy...`);
+  }
+
+  // Attempt 2: r.jina.ai reader proxy - fetches from their servers instead
+  // (free tier is fine for a 30-minute cron)
+  const res2 = await fetch(`https://r.jina.ai/${target}`, {
+    headers: { "X-Return-Format": "html" }
+  });
+  if (!res2.ok) throw new Error(`reader proxy HTTP ${res2.status}`);
+  console.log("reader proxy fetch OK");
+  return await res2.text();
+}
+
+// Fetch watcher count for one user
+async function getWatchers(user) {
+  const html = await fetchPage(user);
+  return parseWatchers(html, user);
 }
 
 // Main runner
