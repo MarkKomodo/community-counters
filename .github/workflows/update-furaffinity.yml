@@ -1,2 +1,25 @@
-      - name: Update FurAffinity counters
-        run: node update-furaffinity.js
+name: Update FurAffinity watchers
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: node update-furaffinity.js
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add furaffinity.xml
+          git commit -m "Update FurAffinity watchers" || echo "No changes to commit"
+          git push
