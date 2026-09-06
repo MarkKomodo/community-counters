@@ -1,0 +1,2 @@
+      - name: Update FurAffinity counters
+        run: node update-furaffinity.js
