@@ -124,5 +124,12 @@
     "entity_type": "Group",
     "name": "Furry Belly Hub",
     "value": 0
+  },
+  {
+  "id": "fa_main",
+  "platform": "FurAffinity",
+  "entity_type": "Account",
+  "name": "@furrybellyhub",
+  "value": 0
   }
 ]
